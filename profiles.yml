@@ -1,0 +1,16 @@
+spatial_config:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: postgres
+      password: gradient
+      port: 5432
+      dbname: postgres
+      schema: config
+
+spatial_dwh:
+    dev:
+      type: duckdb
+      path: 'spatial-measurements-dev.duckdb'

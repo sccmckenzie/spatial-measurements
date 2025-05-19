@@ -1,0 +1,8 @@
+name: spatial_config
+config-version: 2
+
+profile: spatial_config
+
+models:
+  spatial_config:
+    +materialized: view
