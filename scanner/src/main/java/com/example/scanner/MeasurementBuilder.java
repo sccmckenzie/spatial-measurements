@@ -12,11 +12,12 @@ import java.util.concurrent.ThreadLocalRandom;
 @Setter // eventually this won't be needed once we pass gridtemplateentry
 public class MeasurementBuilder {
     private Measurement measurement;
+    private GridTemplateEntry gridTemplateEntry;
     private long scanId;
-    private int x;
-    private int y;
 
     public void initializeMeasurement() {
+        int x = gridTemplateEntry.getX();
+        int y = gridTemplateEntry.getY();
         this.measurement = new Measurement(scanId, x, y);
     }
 
