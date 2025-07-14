@@ -8,9 +8,9 @@ import java.util.List;
 @Component
 @Getter
 public class GridTemplate {
-    private final List<GridTemplateEntry> GRID;
+    private final List<GridTemplateEntry> grid;
 
     public GridTemplate(GridTemplateEntryRepository gridTemplateEntryRepository) {
-        GRID = gridTemplateEntryRepository.findAll();
+        grid = gridTemplateEntryRepository.findAll();
     }
 }
