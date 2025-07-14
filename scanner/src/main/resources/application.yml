@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: scanner
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: scanner_rw
+    password: brownies
+  jpa:
+    properties:
+      hibernate:
+        default_schema: raw_measurements
+        jdbc:
+          batch_size: 1
+    hibernate:
+      ddl-auto: update
