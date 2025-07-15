@@ -13,12 +13,14 @@ public class Runner implements CommandLineRunner {
     private final MeasurementBuilder measurementBuilder;
     private final MeasurementRepository measurementRepository;
     private final GridTemplateEntryRepository gridTemplateEntryRepository;
+    private final SequenceScanService sequenceScanService;
 
     @Override
     public void run(String... args) {
         List<GridTemplateEntry> gridTemplateEntries = gridTemplateEntryRepository.findAll();
+        long scanId = sequenceScanService.getNextScanId();
         for (GridTemplateEntry gridTemplateEntry : gridTemplateEntries) {
-            measurementBuilder.setScanId(1L);
+            measurementBuilder.setScanId(scanId);
             measurementBuilder.setGridTemplateEntry(gridTemplateEntry);
             measurementBuilder.initializeMeasurement();
             measurementBuilder.generateMeasurementValue();

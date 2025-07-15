@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Component
 @Scope("prototype")
 @Getter
-@Setter // eventually this won't be needed once we pass gridtemplateentry
+@Setter
 public class MeasurementBuilder {
     private Measurement measurement;
     private GridTemplateEntry gridTemplateEntry;
@@ -18,7 +18,7 @@ public class MeasurementBuilder {
     public void initializeMeasurement() {
         int x = gridTemplateEntry.getX();
         int y = gridTemplateEntry.getY();
-        this.measurement = new Measurement(scanId, x, y);
+        this.measurement = new Measurement(this.scanId, x, y);
     }
 
     public void generateMeasurementValue() {
