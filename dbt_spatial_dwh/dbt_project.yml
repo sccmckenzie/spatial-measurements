@@ -1,0 +1,8 @@
+name: spatial_dwh
+config-version: 2
+
+profile: spatial_dwh
+
+models:
+  spatial_dwh:
+    +materialized: view
