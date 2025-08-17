@@ -3,10 +3,8 @@ package com.example.scanner;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Component
 @Scope("prototype")
 @Getter
 @Setter
