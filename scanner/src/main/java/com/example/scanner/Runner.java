@@ -3,6 +3,7 @@ package com.example.scanner;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import java.util.concurrent.ExecutorService;
@@ -12,15 +13,17 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor
 public class Runner implements CommandLineRunner {
-    private static final Logger logger = LoggerFactory.getLogger(Runner.class);
+    private final Logger logger = LoggerFactory.getLogger(Runner.class);
     private final ScanOrchestrationService scanOrchestrationService;
-    private final static int POOL_SIZE = 5;
-    private final static int NUMBER_OF_TASKS = 100;
-    ExecutorService executor = Executors.newFixedThreadPool(POOL_SIZE);
-
+    @Value("${spring.scan-pool-size:1}")
+    private int POOL_SIZE;
+    @Value("${spring.scan-count:10}")
+    private int NUMBER_OF_TASKS;
 
     @Override
     public void run(String... args) throws Exception {
+        ExecutorService executor = Executors.newFixedThreadPool(POOL_SIZE);
+
         for (int i = 0; i < NUMBER_OF_TASKS; i++) {
             // int taskNumber = i;
             executor.submit(() -> {

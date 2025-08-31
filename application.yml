@@ -2,7 +2,7 @@ spring:
   application:
     name: scanner
   scan-pool-size: 1
-  scan-count: 11
+  scan-count: 3
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: scanner_rw
