@@ -9,7 +9,7 @@ Prerequisites:
 * Docker
 * poetry configured on system
 
-With the prerequisites fulfilled, this repo contains everything you need to run pipeline for this case study end-to-end,
+With the prerequisites fulfilled, this repo contains everything you need to fully reproduce this case study end-to-end,
 including data generation, batch loading, and cooldown.
 
 The Spatial Measurement Simulator itself is a java app - src located in `scanner` dir. This app expects preconfigured
