@@ -4,10 +4,13 @@ This is a companion repository to my blog article: *Addressing Fragmented Data I
 
 Prerequisites:
 
-* Java 24 (JDK 24 if you want to build `scanner` from src)
+* JDK 24
 * maven (I used 3.9.11 when writing this)
 * Docker
 * poetry configured on system
+
+With the prerequisites fulfilled, this repo contains everything you need to run pipeline for this case study end-to-end,
+including data generation, batch loading, and cooldown.
 
 The Spatial Measurement Simulator itself is a java app - src located in `scanner` dir. This app expects preconfigured
 postgres instance at `jdbc:postgresql://localhost:5432/postgres`. Included makefile will provision this database in 
