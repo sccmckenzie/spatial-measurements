@@ -17,3 +17,5 @@ provision:
 	@eval poetry run python provision-grid.py
 	@echo "writing grid file to postgres config db"
 	@eval "poetry run dbt seed --profile spatial_config --project-dir dbt_spatial_config"
+	@echo "build scanner jar from source"
+	@eval "mvn -f ./scanner/pom.xml package -DskipTests"
