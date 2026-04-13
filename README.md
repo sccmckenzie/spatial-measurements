@@ -7,7 +7,7 @@ Prerequisites:
 * JDK 24
 * maven (I used 3.9.11 when writing this)
 * Docker
-* poetry configured on system
+* uv configured on system
 
 With the prerequisites fulfilled, this repo contains everything you need to fully reproduce this case study end-to-end,
 including data generation, batch loading, and cooldown.
@@ -87,7 +87,7 @@ build scanner jar from source
 You can adjust the grid size by changing `scale` (default `10`) in `provision-grid.py`. To apply changes:
 
 ```bash
-poetry run dbt seed --profile spatial_config --project-dir dbt_spatial_config
+uv run dbt seed --profile spatial_config --project-dir dbt_spatial_config
 ```
 
 `scanner` app can be configured in `application.yml` found in project root. Notable parameters include:
