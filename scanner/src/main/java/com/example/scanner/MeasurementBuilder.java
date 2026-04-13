@@ -12,6 +12,8 @@ public class MeasurementBuilder {
     private Measurement measurement;
     private GridTemplateEntry gridTemplateEntry;
     private long scanId;
+    private double measurementMin;
+    private double measurementMax;
 
     public void initializeMeasurement() {
         int x = gridTemplateEntry.getX();
@@ -20,7 +22,7 @@ public class MeasurementBuilder {
     }
 
     public void generateMeasurementValue() {
-        var value = ThreadLocalRandom.current().nextDouble(-1, 1);
+        var value = ThreadLocalRandom.current().nextDouble(measurementMin, measurementMax);
         measurement.setMeasurementValue(value);
     }
 }

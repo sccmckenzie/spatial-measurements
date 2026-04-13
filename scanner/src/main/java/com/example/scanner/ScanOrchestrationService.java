@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,12 +17,20 @@ public class ScanOrchestrationService {
     private final SequenceScanService sequenceScanService;
     private static final Logger logger = LoggerFactory.getLogger(Runner.class);
 
+    @Value("${scan.measurement-min:-1.0}")
+    private double measurementMin;
+
+    @Value("${scan.measurement-max:1.0}")
+    private double measurementMax;
+
     public void executeScan() {
         List<GridTemplateEntry> gridTemplateEntries = gridTemplateEntryRepository.findAll();
         long scanId = sequenceScanService.getNextScanId();
 
         MeasurementBuilder measurementBuilder = new MeasurementBuilder();
         measurementBuilder.setScanId(scanId);
+        measurementBuilder.setMeasurementMin(measurementMin);
+        measurementBuilder.setMeasurementMax(measurementMax);
         int i = 0;
 
         logger.info("scanId: {}, starting", scanId);
