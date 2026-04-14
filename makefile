@@ -13,9 +13,6 @@ provision:
 		sleep 2; \
 	done
 	@echo "Postgres is ready."
-	@echo "Generating grid file"
-	@eval uv run python provision-grid.py
-	@echo "writing grid file to postgres config db"
-	@eval "uv run dbt seed --profile spatial_config --project-dir dbt_spatial_config"
+	@echo "Generating grid file and writing to postgres config db"
 	@echo "build scanner jar from source"
 	@eval "mvn -f ./scanner/pom.xml package -DskipTests"

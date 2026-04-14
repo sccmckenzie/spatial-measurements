@@ -1,15 +1,30 @@
 import polars as pl
+from sqlalchemy import create_engine, text
 
-scale = 10
+radii = range(10, 20)
 
-v = pl.Series("v", range(-scale, scale))
+frames = []
+for r in radii:
+    v = pl.Series("v", range(-r, r + 1))
+    lf0 = pl.LazyFrame({"x": v})
+    grid_r = (lf0
+              .join(lf0.rename({"x": "y"}), how="cross")
+              .filter(pl.col("x").pow(2) + pl.col("y").pow(2) <= r**2)
+              .with_row_index(name="grid_id", offset=1)
+              .with_columns(template_id=r)
+              .collect())
+    frames.append(grid_r)
 
-lf0 = pl.LazyFrame({"x": v})
+out = pl.concat(frames, how="vertical").select("template_id", "grid_id", "x", "y")
+out.write_csv("grid.csv")
 
-out = (lf0
-       .join(lf0.rename({"x": "y"}), how="cross")
-       .filter(pl.col("x").pow(2) + pl.col("y").pow(2) <= scale**2)
-       .with_row_index(name="grid_id", offset=1)
-       .collect())
+engine = create_engine("postgresql+psycopg2://postgres:gradient@localhost:5432/postgres")
+with engine.begin() as conn:
+    conn.execute(text("create schema if not exists config"))
+    conn.execute(text("drop table if exists config.grid"))
 
-out.write_csv("dbt_spatial_config/seeds/grid.csv")
+out.write_database(
+    table_name="config.grid",
+    connection=engine,
+    if_table_exists="replace",
+)
