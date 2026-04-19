@@ -115,9 +115,9 @@ class MeasurementBuilderTest {
         return b;
     }
 
-    private static GridTemplateEntry gridEntry(int gridId, int x, int y) {
+    private static GridTemplateEntry gridEntry(int id, int x, int y) {
         GridTemplateEntry entry = new GridTemplateEntry();
-        entry.setGridId(gridId);
+        entry.setId(id);
         entry.setX(x);
         entry.setY(y);
         return entry;

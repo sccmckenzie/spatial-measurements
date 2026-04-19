@@ -10,12 +10,14 @@ for r in radii:
     grid_r = (lf0
               .join(lf0.rename({"x": "y"}), how="cross")
               .filter(pl.col("x").pow(2) + pl.col("y").pow(2) <= r**2)
-              .with_row_index(name="grid_id", offset=1)
               .with_columns(template_id=r)
               .collect())
     frames.append(grid_r)
 
-out = pl.concat(frames, how="vertical").select("template_id", "grid_id", "x", "y")
+out = (pl.concat(frames, how="vertical")
+       .with_row_index(name="id", offset=1)
+       .select("id", "template_id", "x", "y")
+       )
 out.write_csv("grid.csv")
 
 engine = create_engine("postgresql+psycopg2://postgres:gradient@localhost:5432/postgres")

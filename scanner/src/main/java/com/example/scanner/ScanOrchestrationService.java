@@ -1,5 +1,6 @@
 package com.example.scanner;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +18,7 @@ public class ScanOrchestrationService {
     private final GridTemplateEntryRepository gridTemplateEntryRepository;
     private final SequenceScanService sequenceScanService;
     private static final Logger logger = LoggerFactory.getLogger(Runner.class);
+    private List<Integer> templateIds;
 
     @Value("${scan.measurement-min:-1.0}")
     private double measurementMin;
@@ -23,8 +26,17 @@ public class ScanOrchestrationService {
     @Value("${scan.measurement-max:1.0}")
     private double measurementMax;
 
+    @PostConstruct
+    void loadTemplateIds() {
+        this.templateIds = gridTemplateEntryRepository.findDistinctTemplateIds();
+        logger.info("Loaded {} template ids: {}", templateIds.size(), templateIds);
+    }
+
+
     public void executeScan() {
-        List<GridTemplateEntry> gridTemplateEntries = gridTemplateEntryRepository.findAll();
+        int templateId = templateIds.get(ThreadLocalRandom.current().nextInt(templateIds.size()));
+        List<GridTemplateEntry> gridTemplateEntries = gridTemplateEntryRepository.findByTemplateId(templateId);
+
         long scanId = sequenceScanService.getNextScanId();
 
         MeasurementBuilder measurementBuilder = new MeasurementBuilder();

@@ -15,7 +15,9 @@ import org.hibernate.annotations.Immutable;
 public class GridTemplateEntry {
 
     @Id
-    private Integer gridId;
+    private Integer id;
+
+    private Integer templateId;
 
     private Integer x;
     private Integer y;
