@@ -2,10 +2,8 @@ package com.example.scanner;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Scope;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Scope("prototype")
 @Getter
 @Setter
 public class MeasurementBuilder {
