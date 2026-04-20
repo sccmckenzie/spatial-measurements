@@ -1,8 +1,6 @@
 spring:
   application:
     name: scanner
-  scan-pool-size: 1
-  scan-count: 3
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: scanner_rw
@@ -15,3 +13,9 @@ spring:
           batch_size: 1
     hibernate:
       ddl-auto: update
+
+scanner:
+  pool-size: 1
+  count: 3
+  write-delay-ms-min: 5
+  write-delay-ms-max: 50

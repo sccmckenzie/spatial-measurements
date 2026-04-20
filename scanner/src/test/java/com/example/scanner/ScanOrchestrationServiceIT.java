@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @Testcontainers
 @Transactional
-@SpringBootTest()
+@SpringBootTest
 @ActiveProfiles("test") // disabled during tests to keep Runner from consuming scanIds and writing rows before assertions run
 class ScanOrchestrationServiceIT {
 
@@ -39,6 +39,8 @@ class ScanOrchestrationServiceIT {
         r.add("spring.datasource.password", postgres::getPassword);
         r.add("spring.jpa.hibernate.ddl-auto", () -> "none");
         r.add("spring.jpa.properties.hibernate.default_schema", () -> "raw_measurements");
+        r.add("scanner.write-delay-ms-min", () -> 0);
+        r.add("scanner.write-delay-ms-max", () -> 0);
     }
 
     @Autowired ScanOrchestrationService service;
