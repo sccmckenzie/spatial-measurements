@@ -21,6 +21,7 @@ create table config.grid
 );
 
 -- seed a tiny multi-template grid: template 3 has 4 points, template 5 has 9 points
+-- templates with intentionally different sizes so the "varying counts" assertion has signal to detect
 insert into config.grid (id, template_id, x, y)
 values (1, 3, 0, 0),
        (2, 3, 1, 0),
