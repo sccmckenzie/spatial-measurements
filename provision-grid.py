@@ -10,6 +10,10 @@ for r in radii:
     grid_r = (lf0
               .join(lf0.rename({"x": "y"}), how="cross")
               .filter(pl.col("x").pow(2) + pl.col("y").pow(2) <= r**2)
+              .filter(~(
+                  ((pl.col("x") == 0) & (pl.col("y").abs() == r))
+                  | ((pl.col("y") == 0) & (pl.col("x").abs() == r))
+              ))
               .with_columns(template_id=r)
               .collect())
     frames.append(grid_r)
