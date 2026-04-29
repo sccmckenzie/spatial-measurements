@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>plot-stream</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1a1a1a;
+      --muted: #666666;
+      --border: #dddddd;
+    }
+    [data-theme="dark"] {
+      --bg: #15171a;
+      --fg: #e8e8e8;
+      --muted: #999999;
+      --border: #333333;
+    }
+    html, body { background: var(--bg); color: var(--fg); }
+    body { font-family: system-ui, sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+    header { margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+    h1 { margin: 0; font-size: 1.25rem; }
+    p.sub { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.9rem; }
+    #chart { min-height: 400px; }
+    #wafer-grid { margin-top: 2rem; }
+    #wafer-grid h2 { margin: 0 0 0.5rem; font-size: 1rem; }
+    #theme-toggle {
+      background: transparent;
+      color: var(--fg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.25rem 0.6rem;
+      font: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    #theme-toggle:hover { border-color: var(--muted); }
+  </style>
+  <script>
+    (() => {
+      const saved = localStorage.getItem("theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.setAttribute("data-theme", saved || (prefersDark ? "dark" : "light"));
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>plot-stream</h1>
+      <p class="sub">live metrics via SSE</p>
+    </div>
+    <button id="theme-toggle" type="button"></button>
+  </header>
+  <div id="chart"></div>
+  <div id="wafer-grid"><h2>wafer maps</h2></div>
+
+  <script>
+    (() => {
+      const btn = document.getElementById("theme-toggle");
+      const update = () => btn.textContent = document.documentElement.dataset.theme === "dark" ? "Light mode" : "Dark mode";
+      btn.addEventListener("click", () => {
+        const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+        update();
+      });
+      update();
+    })();
+  </script>
+  <script src="/static/vendor/d3.min.js"></script>
+  <script src="/static/vendor/plot.umd.min.js"></script>
+  <script src="/static/main.js"></script>
+  <script src="/static/wafer.js"></script>
+</body>
+</html>
