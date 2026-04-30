@@ -26,8 +26,8 @@ function render(rows) {
     style: { background: "transparent", color: "var(--fg)" },
     fx: { axis: null, domain: COL_DOMAIN },
     fy: { axis: null, domain: ROW_DOMAIN },
-    x: { axis: null, domain: WAFER_RANGE },
-    y: { axis: null, reverse: true, domain: WAFER_RANGE },
+    x: { axis: null },
+    y: { axis: null },
     color: { scheme: "magma", legend: true, label: "measurement_value" },
     marks: [
       Plot.cell(data, {
