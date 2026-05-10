@@ -28,6 +28,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+app.mount("/vendor", StaticFiles(directory=Path(__file__).parent.parent / "vendor"), name="vendor")
 
 
 @app.get("/")

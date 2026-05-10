@@ -14,10 +14,19 @@ function render(rows) {
     const i = idxByScan.get(r.scan_id);
     return { ...r, _col: i % COLS, _row: Math.floor(i / COLS) };
   });
+  const extents = new Map();
+  for (const r of rows) {
+    const e = Math.max(Math.abs(r.x), Math.abs(r.y));
+    extents.set(r.scan_id, Math.max(extents.get(r.scan_id) ?? 0, e));
+  }
+  const maxExtent = Math.max(0, ...extents.values());
+  const bandPx = FACET_PX / Math.max(1, 2 * maxExtent + 1);
+
   const labels = scans.map((id, i) => ({
     scan_id: id,
     _col: i % COLS,
     _row: Math.floor(i / COLS),
+    r_px: 1.05 * (extents.get(id) ?? 0) * bandPx,
   }));
 
   const chart = Plot.plot({
@@ -36,6 +45,16 @@ function render(rows) {
         fx: "_col", fy: "_row",
         inset: 0.5,
       }),
+      /*
+      Plot.dot(labels, {
+        x: 0, y: 0,
+        fx: "_col", fy: "_row",
+        r: "r_px",
+        fill: "none",
+        stroke: "currentColor",
+        strokeOpacity: 0.5,
+      }),
+      */
       Plot.text(labels, {
         fx: "_col", fy: "_row",
         text: d => `scan ${d.scan_id}`,
