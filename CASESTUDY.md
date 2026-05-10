@@ -10,9 +10,9 @@ This article is inspired by a real data engineering scenario encountered in semi
 
 Perhaps the most quintessential method for visualizing electrical test performance is the **wafer map**, example shown below.
 
-<picture>
-    <img src="plot/case-study/single-wafer/single-wafer-annotated.svg">
-</picture>
-
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="plot/case-study/single-wafer/single-wafer-annotated-dark.svg">
+    <img src="plot/case-study/single-wafer/single-wafer-annotated-light.svg">
+  </picture>
 
 * note on running workflow
