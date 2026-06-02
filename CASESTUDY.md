@@ -22,6 +22,8 @@ Wafer maps help visualizing potential spatial patterns. Random failures tend to 
     <img src="plot/case-study/signature/signatures-light.svg">
 </picture>
 
+## The Data Engineering Challenge
+
 Below diagram shows the journey taken by electrical test data from **measurement** to **yield analysis application**. Note the separation between the Production and Reporting DB - this is vital to ensure Production DB remains available to support processing & movement of material (i.e. if the electrical testers cannot run, the line stops). 
 
 <picture>
