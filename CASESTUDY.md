@@ -91,8 +91,8 @@ limit 10
 
 <p align="center">
     <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="plot/case-study/interleaved/interleaved-dark.svg">
-        <img src="plot/case-study/interleaved/interleaved-light.svg" alt="The ten most recent measurement records, with rows for wafers 5 and 6 interleaved and color-coded by wafer.">
+        <source media="(prefers-color-scheme: dark)" srcset="plot/case-study/six-pack/interleaved/interleaved-dark.svg">
+        <img src="plot/case-study/six-pack/interleaved/interleaved-light.svg" alt="The ten most recent measurement records, with rows for wafers 5 and 6 interleaved and color-coded by wafer.">
     </picture>
 </p>
 <p align="center"><sub><em>Figure 5: The ten most recent measurement records. Rows for wafers 5 and 6 alternate — the two are on the tester at once, so their measurements land in the Reporting DB interleaved, milliseconds apart.</em></sub></p>
