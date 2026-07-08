@@ -74,7 +74,7 @@ Some important observations:
 
 ## The Solution
 
-To untangle this, let's start at the source. In the bleeding-edge records below, notice that wafers 5 and 6 are **interleaved** — the testers are probing both at once, so their measurements arrive row-by-row, side by side. This is why simply dropping the latest wafer doesn't work: at any given moment, *several* wafers sit unfinished at the bleeding edge, not just the single most recent one. So the real task is to reliably tell a wafer that's fully written apart from one whose measurements are still streaming in.
+To untangle this, let's start at the source. In the bleeding-edge records below, notice that wafers 5 and 6 are **interleaved** — the testers are probing both at once, so their measurements arrive row-by-row. **This is why simply dropping the latest wafer doesn't work**: at any given moment, *several* wafers sit unfinished at the bleeding edge, not just the single most recent one.
 
 ```sql
 select
