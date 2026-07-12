@@ -87,7 +87,7 @@ Figure 6 provides a temporal representation of database write activity by wafer 
         <img src="plot/case-study/timeline/timeline-light.svg" alt="A timeline of when each wafer's measurements are written to the database. Wafers 1–4 finish before the moment the query runs; wafers 5 and 6 are still being written as the query executes, so their maps come back incomplete.">
     </picture>
 </p>
-<p align="center"><sub><em>Figure 6: The ten most recent measurement records. Rows for wafers 5 and 6 alternate — the two are on the tester at once, so their measurements land in the Reporting DB interleaved, within seconds of each other.</em></sub></p>
+<p align="center"><sub><em>Figure 6: A timeline of when each wafer's measurements are written to the database. Wafers 1–4 finish before the moment the query runs; wafers 5 and 6 are still being written as the query executes, so their maps come back incomplete.</em></sub></p>
 
 
 ## The Solution
