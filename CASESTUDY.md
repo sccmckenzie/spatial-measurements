@@ -54,27 +54,9 @@ Suppose the factory is running at full capacity: our testers are continuously me
 </p>
 <p align="center"><sub><em>Figure 4: The six most recent wafer maps. Wafers 5 and 6 come back incomplete — their measurements are still being written to the Production DB.</em></sub></p>
 
-From an end-user perspective, this is unacceptable. Not only would incomplete maps undermine trust in the Application, but the gaps are silent — anyone aggregating statistics in the data layer would fold the missing measurements into invalid results without ever noticing (see records 5 & 6 below).
+From an end-user perspective, this is unacceptable. Not only would incomplete maps undermine trust in the Reporting Application, but the gaps are silent — anyone generating statistics in the data layer would be unwittingly aggregating on incomplete information.
 
-| wafer\_id | num\_passing | num\_total |
-| :------- | :---------- | :-------- |
-| 1        | 272         | 373       |
-| 2        | 244         | 313       |
-| 3        | 240         | 313       |
-| 4        | 290         | 373       |
-| 5        | 195 ⚠️      | 249 ⚠️    |
-| 6        | 136 ⚠️      | 193 ⚠️    |
-
-Some important observations:
-
-* **Timing offers no escape.** It doesn't matter when the consumer runs their query — fragmentation is inevitable.
-  * Filtering out the most recent "bleeding-edge" records won't save you either — at full capacity there's always a fresh cohort still being written, so you just shift the problem instead of solving it.
-* **Transactions aren't a reliable fix.** One obvious idea is to have the tester equipment wrap all of a wafer's measurements in a single SQL transaction, but in the real world that isn't always possible.
-* **A fixed-count filter won't work either.** Wafers vary in total chip count, so we can't simply filter the query to expose only wafers that have hit some fixed number of chips.
-
-## The Solution
-
-To untangle this, let's start at the source. In the bleeding-edge records below, notice that wafers 5 and 6 are **interleaved** — the testers are probing both at once, so their measurements arrive row-by-row. **This is why simply dropping the latest wafer doesn't work**: at any given moment, *several* wafers sit unfinished at the bleeding edge, not just the single most recent one.
+To untangle this, let's start at the source. In the bleeding-edge records below, notice that wafers 5 and 6 are **interleaved** — the testers are probing both simultaneously, so their measurements arrive row-by-row. **This is why simply dropping the latest wafer doesn't work**: at any given moment, *several* wafers sit unfinished at the bleeding edge, not just the single most recent one.
 
 ```sql
 select
@@ -95,4 +77,24 @@ limit 10
         <img src="plot/case-study/six-pack/interleaved/interleaved-light.svg" alt="The ten most recent measurement records, with rows for wafers 5 and 6 interleaved and color-coded by wafer.">
     </picture>
 </p>
-<p align="center"><sub><em>Figure 5: The ten most recent measurement records. Rows for wafers 5 and 6 alternate — the two are on the tester at once, so their measurements land in the Reporting DB interleaved, milliseconds apart.</em></sub></p>
+<p align="center"><sub><em>Figure 5: The ten most recent measurement records. Rows for wafers 5 and 6 alternate — the two are on the tester at once, so their measurements land in the Reporting DB interleaved, within seconds of each other.</em></sub></p>
+
+Figure 6 provides a temporal representation of database write activity by wafer — and shows what happens when a query cuts across wafers still being written.
+
+<p align="center">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="plot/case-study/timeline/timeline-dark.svg">
+        <img src="plot/case-study/timeline/timeline-light.svg" alt="A timeline of when each wafer's measurements are written to the database. Wafers 1–4 finish before the moment the query runs; wafers 5 and 6 are still being written as the query executes, so their maps come back incomplete.">
+    </picture>
+</p>
+<p align="center"><sub><em>Figure 6: The ten most recent measurement records. Rows for wafers 5 and 6 alternate — the two are on the tester at once, so their measurements land in the Reporting DB interleaved, within seconds of each other.</em></sub></p>
+
+
+## The Solution
+
+Some important observations:
+
+* **Timing offers no escape.** It doesn't matter when the consumer runs their query — fragmentation is inevitable.
+  * Filtering out the most recent "bleeding-edge" records won't save you either — at full capacity there's always a fresh cohort still being written, so you just shift the problem instead of solving it.
+* **Transactions aren't a reliable fix.** One obvious idea is to have the tester equipment wrap all of a wafer's measurements in a single SQL transaction, but in the real world that isn't always possible.
+* **A fixed-count filter won't work either.** Wafers vary in total chip count, so we can't simply filter the query to expose only wafers that have hit some fixed number of chips.

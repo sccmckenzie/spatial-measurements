@@ -9,80 +9,81 @@
     <text x="380" y="22">modified_at</text>
   </g>
   <line x1="8" y1="30" x2="560" y2="30" stroke="#1e1e1e" stroke-opacity="0.25"/>
-  <rect x="6" y="36" width="548" height="26" fill="#7c3aed" fill-opacity="0.15"/>
-  <text x="12" y="53" fill="#1e1e1e">1649</text>
-  <text x="150" y="53" fill="#7c3aed" font-weight="bold">6</text>
-  <text x="240" y="53" fill="deepskyblue" font-weight="bold">true</text>
-  <text x="312" y="53" text-anchor="end" fill="#1e1e1e">-1</text>
-  <text x="350" y="53" text-anchor="end" fill="#1e1e1e">-4</text>
-  <text x="380" y="53" fill="#1e1e1e">16:24:57.012571</text>
-  <rect x="6" y="62" width="548" height="26" fill="#059669" fill-opacity="0.15"/>
-  <text x="12" y="79" fill="#1e1e1e">1648</text>
-  <text x="150" y="79" fill="#059669" font-weight="bold">5</text>
-  <text x="240" y="79" fill="deepskyblue" font-weight="bold">true</text>
-  <text x="312" y="79" text-anchor="end" fill="#1e1e1e">4</text>
-  <text x="350" y="79" text-anchor="end" fill="#1e1e1e">6</text>
-  <text x="380" y="79" fill="#1e1e1e">16:24:57.012332</text>
-  <rect x="6" y="88" width="548" height="26" fill="#7c3aed" fill-opacity="0.15"/>
-  <text x="12" y="105" fill="#1e1e1e">1647</text>
-  <text x="150" y="105" fill="#7c3aed" font-weight="bold">6</text>
-  <text x="240" y="105" fill="tomato" font-weight="bold">false</text>
-  <text x="312" y="105" text-anchor="end" fill="#1e1e1e">-1</text>
-  <text x="350" y="105" text-anchor="end" fill="#1e1e1e">-5</text>
-  <text x="380" y="105" fill="#1e1e1e">16:24:57.010322</text>
-  <rect x="6" y="114" width="548" height="26" fill="#059669" fill-opacity="0.15"/>
-  <text x="12" y="131" fill="#1e1e1e">1646</text>
-  <text x="150" y="131" fill="#059669" font-weight="bold">5</text>
-  <text x="240" y="131" fill="deepskyblue" font-weight="bold">true</text>
-  <text x="312" y="131" text-anchor="end" fill="#1e1e1e">4</text>
-  <text x="350" y="131" text-anchor="end" fill="#1e1e1e">5</text>
-  <text x="380" y="131" fill="#1e1e1e">16:24:57.010035</text>
-  <rect x="6" y="140" width="548" height="26" fill="#7c3aed" fill-opacity="0.15"/>
-  <text x="12" y="157" fill="#1e1e1e">1645</text>
-  <text x="150" y="157" fill="#7c3aed" font-weight="bold">6</text>
-  <text x="240" y="157" fill="deepskyblue" font-weight="bold">true</text>
-  <text x="312" y="157" text-anchor="end" fill="#1e1e1e">-1</text>
-  <text x="350" y="157" text-anchor="end" fill="#1e1e1e">-6</text>
-  <text x="380" y="157" fill="#1e1e1e">16:24:57.008027</text>
-  <rect x="6" y="166" width="548" height="26" fill="#059669" fill-opacity="0.15"/>
-  <text x="12" y="183" fill="#1e1e1e">1644</text>
-  <text x="150" y="183" fill="#059669" font-weight="bold">5</text>
+  <rect x="6" y="36" width="548" height="26" fill="#334155" fill-opacity="0.15"/>
+  <text x="12" y="53" fill="#1e1e1e">1479</text>
+  <text x="150" y="53" fill="#1e1e1e">6</text>
+  <text x="240" y="53" fill="tomato" font-weight="bold">false</text>
+  <text x="312" y="53" text-anchor="end" fill="#1e1e1e">3</text>
+  <text x="350" y="53" text-anchor="end" fill="#1e1e1e">3</text>
+  <text x="380" y="53" fill="#1e1e1e">13:43:17</text>
+  <rect x="6" y="62" width="548" height="26" fill="#334155" fill-opacity="0.15"/>
+  <text x="12" y="79" fill="#1e1e1e">1478</text>
+  <text x="150" y="79" fill="#1e1e1e">6</text>
+  <text x="240" y="79" fill="tomato" font-weight="bold">false</text>
+  <text x="312" y="79" text-anchor="end" fill="#1e1e1e">3</text>
+  <text x="350" y="79" text-anchor="end" fill="#1e1e1e">2</text>
+  <text x="380" y="79" fill="#1e1e1e">13:43:08</text>
+  <rect x="6" y="88" width="548" height="26" fill="#94a3b8" fill-opacity="0.15"/>
+  <text x="12" y="105" fill="#1e1e1e">1477</text>
+  <text x="150" y="105" fill="#1e1e1e">5</text>
+  <text x="240" y="105" fill="deepskyblue" font-weight="bold">true</text>
+  <text x="312" y="105" text-anchor="end" fill="#1e1e1e">4</text>
+  <text x="350" y="105" text-anchor="end" fill="#1e1e1e">-1</text>
+  <text x="380" y="105" fill="#1e1e1e">13:43:07</text>
+  <rect x="6" y="114" width="548" height="26" fill="#334155" fill-opacity="0.15"/>
+  <text x="12" y="131" fill="#1e1e1e">1476</text>
+  <text x="150" y="131" fill="#1e1e1e">6</text>
+  <text x="240" y="131" fill="tomato" font-weight="bold">false</text>
+  <text x="312" y="131" text-anchor="end" fill="#1e1e1e">3</text>
+  <text x="350" y="131" text-anchor="end" fill="#1e1e1e">1</text>
+  <text x="380" y="131" fill="#1e1e1e">13:42:58</text>
+  <rect x="6" y="140" width="548" height="26" fill="#94a3b8" fill-opacity="0.15"/>
+  <text x="12" y="157" fill="#1e1e1e">1475</text>
+  <text x="150" y="157" fill="#1e1e1e">5</text>
+  <text x="240" y="157" fill="tomato" font-weight="bold">false</text>
+  <text x="312" y="157" text-anchor="end" fill="#1e1e1e">4</text>
+  <text x="350" y="157" text-anchor="end" fill="#1e1e1e">-2</text>
+  <text x="380" y="157" fill="#1e1e1e">13:42:57</text>
+  <rect x="6" y="166" width="548" height="26" fill="#334155" fill-opacity="0.15"/>
+  <text x="12" y="183" fill="#1e1e1e">1474</text>
+  <text x="150" y="183" fill="#1e1e1e">6</text>
   <text x="240" y="183" fill="deepskyblue" font-weight="bold">true</text>
-  <text x="312" y="183" text-anchor="end" fill="#1e1e1e">4</text>
-  <text x="350" y="183" text-anchor="end" fill="#1e1e1e">4</text>
-  <text x="380" y="183" fill="#1e1e1e">16:24:57.007679</text>
-  <rect x="6" y="192" width="548" height="26" fill="#7c3aed" fill-opacity="0.15"/>
-  <text x="12" y="209" fill="#1e1e1e">1643</text>
-  <text x="150" y="209" fill="#7c3aed" font-weight="bold">6</text>
+  <text x="312" y="183" text-anchor="end" fill="#1e1e1e">3</text>
+  <text x="350" y="183" text-anchor="end" fill="#1e1e1e">0</text>
+  <text x="380" y="183" fill="#1e1e1e">13:42:48</text>
+  <rect x="6" y="192" width="548" height="26" fill="#94a3b8" fill-opacity="0.15"/>
+  <text x="12" y="209" fill="#1e1e1e">1473</text>
+  <text x="150" y="209" fill="#1e1e1e">5</text>
   <text x="240" y="209" fill="deepskyblue" font-weight="bold">true</text>
-  <text x="312" y="209" text-anchor="end" fill="#1e1e1e">-1</text>
-  <text x="350" y="209" text-anchor="end" fill="#1e1e1e">-7</text>
-  <text x="380" y="209" fill="#1e1e1e">16:24:57.005875</text>
-  <rect x="6" y="218" width="548" height="26" fill="#059669" fill-opacity="0.15"/>
-  <text x="12" y="235" fill="#1e1e1e">1642</text>
-  <text x="150" y="235" fill="#059669" font-weight="bold">5</text>
+  <text x="312" y="209" text-anchor="end" fill="#1e1e1e">4</text>
+  <text x="350" y="209" text-anchor="end" fill="#1e1e1e">-3</text>
+  <text x="380" y="209" fill="#1e1e1e">13:42:48</text>
+  <rect x="6" y="218" width="548" height="26" fill="#334155" fill-opacity="0.15"/>
+  <text x="12" y="235" fill="#1e1e1e">1472</text>
+  <text x="150" y="235" fill="#1e1e1e">6</text>
   <text x="240" y="235" fill="deepskyblue" font-weight="bold">true</text>
-  <text x="312" y="235" text-anchor="end" fill="#1e1e1e">4</text>
-  <text x="350" y="235" text-anchor="end" fill="#1e1e1e">3</text>
-  <text x="380" y="235" fill="#1e1e1e">16:24:57.005417</text>
-  <rect x="6" y="244" width="548" height="26" fill="#7c3aed" fill-opacity="0.15"/>
-  <text x="12" y="261" fill="#1e1e1e">1641</text>
-  <text x="150" y="261" fill="#7c3aed" font-weight="bold">6</text>
-  <text x="240" y="261" fill="tomato" font-weight="bold">false</text>
-  <text x="312" y="261" text-anchor="end" fill="#1e1e1e">-2</text>
-  <text x="350" y="261" text-anchor="end" fill="#1e1e1e">7</text>
-  <text x="380" y="261" fill="#1e1e1e">16:24:57.003742</text>
-  <rect x="6" y="270" width="548" height="26" fill="#059669" fill-opacity="0.15"/>
-  <text x="12" y="287" fill="#1e1e1e">1640</text>
-  <text x="150" y="287" fill="#059669" font-weight="bold">5</text>
-  <text x="240" y="287" fill="deepskyblue" font-weight="bold">true</text>
-  <text x="312" y="287" text-anchor="end" fill="#1e1e1e">4</text>
-  <text x="350" y="287" text-anchor="end" fill="#1e1e1e">2</text>
-  <text x="380" y="287" fill="#1e1e1e">16:24:57.003169</text>
+  <text x="312" y="235" text-anchor="end" fill="#1e1e1e">3</text>
+  <text x="350" y="235" text-anchor="end" fill="#1e1e1e">-1</text>
+  <text x="380" y="235" fill="#1e1e1e">13:42:38</text>
+  <rect x="6" y="244" width="548" height="26" fill="#94a3b8" fill-opacity="0.15"/>
+  <text x="12" y="261" fill="#1e1e1e">1471</text>
+  <text x="150" y="261" fill="#1e1e1e">5</text>
+  <text x="240" y="261" fill="deepskyblue" font-weight="bold">true</text>
+  <text x="312" y="261" text-anchor="end" fill="#1e1e1e">4</text>
+  <text x="350" y="261" text-anchor="end" fill="#1e1e1e">-4</text>
+  <text x="380" y="261" fill="#1e1e1e">13:42:38</text>
+  <rect x="6" y="270" width="548" height="26" fill="#334155" fill-opacity="0.15"/>
+  <text x="12" y="287" fill="#1e1e1e">1470</text>
+  <text x="150" y="287" fill="#1e1e1e">6</text>
+  <text x="240" y="287" fill="tomato" font-weight="bold">false</text>
+  <text x="312" y="287" text-anchor="end" fill="#1e1e1e">3</text>
+  <text x="350" y="287" text-anchor="end" fill="#1e1e1e">-2</text>
+  <text x="380" y="287" fill="#1e1e1e">13:42:29</text>
   <path d="M560 36 H568 V296 H560" fill="none" stroke="#1e1e1e" stroke-width="1.5"/>
   <g font-family="system-ui, sans-serif" fill="#1e1e1e" fill-opacity="0.7">
-    <text x="596" y="152">wafers 5 &amp; 6 interleaved —</text>
-    <text x="596" y="170">both on the tester at once,</text>
-    <text x="596" y="188">rows land ~2 ms apart</text>
+    <text x="596" y="139">wafers 5 &amp; 6 interleaved —</text>
+    <text x="596" y="157">both on the tester at once,</text>
+    <text x="596" y="175">rows land within seconds</text>
+    <text x="596" y="193">of each other</text>
   </g>
 </svg>
