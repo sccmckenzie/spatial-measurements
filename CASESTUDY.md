@@ -71,6 +71,8 @@ order by measurement_id desc
 limit 10
 ```
 
+Need to adjust modified_at col width
+
 <p align="center">
     <picture>
         <source media="(prefers-color-scheme: dark)" srcset="plot/case-study/six-pack/interleaved/interleaved-dark.svg">
