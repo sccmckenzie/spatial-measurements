@@ -1,4 +1,0 @@
-spatial_dwh:
-    dev:
-      type: duckdb
-      path: 'spatial-measurements-dev.duckdb'
