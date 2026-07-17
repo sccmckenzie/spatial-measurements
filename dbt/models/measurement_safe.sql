@@ -15,8 +15,8 @@ with source as (
         modified_at
     from raw.measurement_stretched
     {% if is_incremental() %}
-      -- only pull rows newer than what we've already landed
-      where modified_at > (select max(modified_at) from {{ this }})
+      -- overextract by a large margin to ensure that we do not sweep scan_id's under the rug
+      where modified_at > (select max(modified_at) from {{ this }}) - interval '120 minutes'
     {% endif %}
 ),
 

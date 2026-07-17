@@ -1,0 +1,8 @@
+name: dwh
+config-version: 2
+
+profile: default
+
+models:
+  dwh:
+    +materialized: view
