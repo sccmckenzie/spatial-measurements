@@ -1,4 +1,4 @@
-# Overcoming Fragmented Spatial Mapscc
+# Overcoming Fragmented Spatial Maps
 
 ## Background
 
@@ -40,7 +40,7 @@ Below diagram shows the journey from **measurement** to **analysis application**
 </p>
 <p align="center"><sub><em>Figure 3: The journey of electrical test data, from measurement to analysis application. The Production and Reporting DBs are deliberately kept separate.</em></sub></p>
 
-For the purposes of this case study, we'll assume both databases live in the same environment, so mirroring Production into Reporting is straightforward.
+For the purposes of this case study, we'll assume both databases live in the same environment, so mirroring Production into Reporting is straightforward — though, as we'll see, we won't keep it that way.
 
 The challenge lies in what that faithful mirror hands us. Because we have no control over how the Production DB is written, the electrical test data lands in the Reporting DB exactly as production produced it — and as we'll see, that's where things get interesting.
 
@@ -66,7 +66,7 @@ select
   x,
   y,
   modified_at -- prod db insertion timestamp
-from raw_measurements.measurement
+from raw.measurement
 order by measurement_id desc
 limit 10
 ```
@@ -91,12 +91,15 @@ Figure 6 provides a temporal representation of database write activity by wafer 
 </p>
 <p align="center"><sub><em>Figure 6: A timeline of when each wafer's measurements are written to the database. Wafers 1–4 finish before the moment the query runs; wafers 5 and 6 are still being written as the query executes, so their maps come back incomplete.</em></sub></p>
 
+So why not just detect completion directly? Every route is blocked — and the owner of the production system is unable (or unwilling) to accommodate any change that would make our lives easier:
+
+* **No fixed-count filter.** Wafers vary in total chip count, so we can't expose only those that have reached some fixed number of chips.
+* **No completion flag.** The producer writes no flag on the final record for a given `wafer_id`.
+* **No transaction boundary.** There's no way to wrap all of a wafer's inserts into a single transaction.
 
 ## The Solution
 
-Some important observations:
+Since the source gives us no signal that a wafer is complete, we have to infer it — and the one thing we *do* have is timing. A wafer whose writes have gone quiet is almost certainly finished; one still receiving inserts is not. So we need a buffer between the Production and Reporting DB that holds a wafer back until *all of it* has settled.
 
-* **Timing offers no escape.** It doesn't matter when the consumer runs their query — fragmentation is inevitable.
-  * Filtering out the most recent "bleeding-edge" records won't save you either — at full capacity there's always a fresh cohort still being written, so you just shift the problem instead of solving it.
-* **Transactions aren't a reliable fix.** One obvious idea is to have the tester equipment wrap all of a wafer's measurements in a single SQL transaction, but in the real world that isn't always possible.
-* **A fixed-count filter won't work either.** Wafers vary in total chip count, so we can't simply filter the query to expose only wafers that have hit some fixed number of chips.
+This is where we drop the native replication. Rather than mirroring Production straight through to the Application, we route the raw data through a **dbt** model that applies a **watermark** — a cutoff that surfaces a wafer only once its writes have gone quiet, holding the still-arriving bleeding edge out of view.
+
