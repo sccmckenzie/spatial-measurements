@@ -1,7 +1,8 @@
 import polars as pl
 from sqlalchemy import create_engine, text
 
-radii = range(10, 20)
+radii = range(8, 12)
+# radii = range(5, 6)
 
 frames = []
 for r in radii:
