@@ -14,5 +14,6 @@ provision:
 	done
 	@echo "Postgres is ready."
 	@echo "Generating grid file and writing to postgres config db"
+	uv run provision-grid.py
 	@echo "build scanner jar from source"
 	@eval "mvn -f ./scanner/pom.xml package -DskipTests"
