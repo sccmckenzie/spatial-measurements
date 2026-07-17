@@ -1,0 +1,9 @@
+dbt/target
+dbt/logs
+*.user.yml
+
+.vscode
+.idea
+
+MEMORY.md
+grid.csv

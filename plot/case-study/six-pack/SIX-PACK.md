@@ -19,6 +19,10 @@ Postgres, queried live:
 postgresql://scanner_ro:applesauce@localhost:5432/postgres
 ```
 
+`backup.sql` in this directory is a `pg_dumpall` cluster dump captured at the state
+these figures were generated from — restore it if you need to reproduce them
+exactly (see [Restoring the database](#restoring-the-database)).
+
 ```sql
 select
     scan_id,               -- wafer identifier
@@ -100,6 +104,22 @@ absent).
 Note: the brace note's timing phrase ("rows land ~2 ms apart") is hardcoded in
 `build_table_svg()` and is not derived from the data — revisit it if the
 `modified_at` timescale changes.
+
+## Restoring the database
+
+`backup.sql` is a cluster dump (`pg_dumpall`) of the Postgres instance as it stood
+when these SVGs were produced — the `raw` schema and the `measurement_stretched`
+rows the queries above depend on. Restore it when the live database has drifted and
+you need the figures to come out identical.
+
+Against a provisioned container (`make provision`), from the repo root:
+
+```sh
+docker exec -i spatial-measurements-db-1 psql -U postgres < plot/case-study/six-pack/backup.sql
+```
+
+The dump's `CREATE ROLE` block is stripped — it relies on the roles
+`docker-init-scripts/` already made.
 
 ## Regenerate
 
