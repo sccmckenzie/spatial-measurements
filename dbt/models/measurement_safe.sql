@@ -20,13 +20,13 @@ with source as (
     {% endif %}
 ),
 
--- a scan is "safe" once its earliest measurement is more than 120 minutes
+-- a scan is "safe" once its latest measurement is more than 120 seconds old
 -- behind the latest modified_at anywhere in the source (i.e. it has settled)
 safe_scans as (
     select scan_id
     from source
     group by scan_id
-    having min(modified_at) < (select max(modified_at) from source) - interval '120 minutes'
+    having max(modified_at) < (select max(modified_at) from source) - interval '120 seconds'
 )
 
 select source.*
