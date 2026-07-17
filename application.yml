@@ -8,14 +8,14 @@ spring:
   jpa:
     properties:
       hibernate:
-        default_schema: raw_measurements
+        default_schema: raw
         jdbc:
           batch_size: 1
     hibernate:
       ddl-auto: update
 
 scanner:
-  pool-size: 1
-  count: 3
-  write-delay-ms-min: 5
-  write-delay-ms-max: 50
+  pool-size: 4
+  count: 100
+  write-delay-ms-min: 1
+  write-delay-ms-max: 1

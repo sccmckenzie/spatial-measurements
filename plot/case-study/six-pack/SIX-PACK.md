@@ -26,7 +26,7 @@ select
     y,                     -- intra-wafer y coordinate
     measurement_value > -0.5 as pass   -- color sources from here
 from
-    raw_measurements.measurement_stretched
+    raw.measurement_stretched
 where measurement_id < 1650    -- 6 wafers (scan_id 1-6), 2 fragmented, human to adjust as necessary
 order by scan_id, x, y
 ```
@@ -77,7 +77,7 @@ second query, `QUERY_TABLE`:
 ```sql
 select measurement_id, scan_id as wafer_id, measurement_value > -0.5 as pass,
        x, y, modified_at
-from raw_measurements.measurement_stretched
+from raw.measurement_stretched
 where measurement_id < 1650 -- 6 wafers (scan_id 1-6), 2 fragmented, human to adjust as necessary
 order by measurement_id desc
 limit 10

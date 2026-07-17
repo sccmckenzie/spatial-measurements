@@ -38,7 +38,7 @@ class ScanOrchestrationServiceIT {
         r.add("spring.datasource.username", postgres::getUsername);
         r.add("spring.datasource.password", postgres::getPassword);
         r.add("spring.jpa.hibernate.ddl-auto", () -> "none");
-        r.add("spring.jpa.properties.hibernate.default_schema", () -> "raw_measurements");
+        r.add("spring.jpa.properties.hibernate.default_schema", () -> "raw");
         r.add("scanner.write-delay-ms-min", () -> 0);
         r.add("scanner.write-delay-ms-max", () -> 0);
     }

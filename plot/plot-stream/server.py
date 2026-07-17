@@ -44,9 +44,9 @@ async def stream():
             async with app.state.pool.acquire() as conn:
                 rows = await conn.fetch(
                     "SELECT scan_id, x, y, measurement_value, modified_at "
-                    "FROM raw_measurements.measurement "
+                    "FROM raw.measurement "
                     "WHERE scan_id IN ("
-                    "  SELECT scan_id FROM raw_measurements.measurement "
+                    "  SELECT scan_id FROM raw.measurement "
                     "  GROUP BY scan_id ORDER BY scan_id ASC LIMIT $1"
                     ") "
                     "ORDER BY scan_id, modified_at",

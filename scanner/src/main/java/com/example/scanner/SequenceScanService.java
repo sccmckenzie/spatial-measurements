@@ -11,7 +11,7 @@ public class SequenceScanService {
     private final JdbcTemplate jdbcTemplate;
     
     public Long getNextScanId() {
-        String sql = "SELECT nextval('raw_measurements.scan_id_sequence')";
+        String sql = "SELECT nextval('raw.scan_id_sequence')";
         return jdbcTemplate.queryForObject(sql, Long.class);
     }
 } 

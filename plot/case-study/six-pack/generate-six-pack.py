@@ -19,7 +19,7 @@ select
 --     measurement_value,
     measurement_value > -0.5 as pass -- color should source from here
 from
-    raw_measurements.measurement_stretched
+    raw.measurement_stretched
 where measurement_id < 1480 -- adjust so this produces a total of 6 wafers, 2 of which are fragmented, which is the purpose of the case study
 order by scan_id, x, y
 """
@@ -34,7 +34,7 @@ select
     x,
     y,
     modified_at
-from raw_measurements.measurement_stretched
+from raw.measurement_stretched
 where measurement_id < 1480 -- adjust so this produces a total of 6 wafers, 2 of which are fragmented, which is the purpose of the case study
 order by measurement_id desc
 limit 10
