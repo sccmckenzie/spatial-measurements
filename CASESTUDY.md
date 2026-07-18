@@ -40,7 +40,7 @@ Below diagram shows the journey from **measurement** to **analysis application**
 </p>
 <p align="center"><sub><em>Figure 3: The journey of electrical test data, from measurement to analysis application. The Production and Reporting DBs are deliberately kept separate.</em></sub></p>
 
-For the purposes of this case study, we'll assume both databases live in the same environment, so mirroring Production into Reporting is straightforward — though, as we'll see, we won't keep it that way.
+For the purposes of this case study, we'll assume both databases live in the same environment, so we *could* easily mirror Production into Reporting.
 
 The challenge lies in what that faithful mirror hands us. Because we have no control over how the Production DB is written, the electrical test data lands in the Reporting DB exactly as production produced it — and as we'll see, that's where things get interesting.
 
@@ -103,3 +103,120 @@ Since the source gives us no signal that a wafer is complete, we have to infer i
 
 This is where we drop the native replication. Rather than mirroring Production straight through to the Application, we route the raw data through a **dbt** model that applies a **watermark** — a cutoff that surfaces a wafer only once its writes have gone quiet, holding the still-arriving bleeding edge out of view.
 
+Suppose we look at a single wafer. We have no completion flag, but every record carries `modified_at`. Take the most recent write for that wafer: if it landed a while ago and nothing has followed, the wafer has gone quiet — and we can safely call it complete. Concretely, a wafer is *settled* once its latest write is older than a fixed buffer:
+
+```sql
+-- "settled" = the wafer's last write is a full buffer behind
+-- the newest write anywhere in the data (not wall-clock now())
+max(modified_at) < (select max(modified_at) from source) - interval '<buffer>'
+```
+
+But how do we set an appropriate interval? Too short and we'll publish a wafer mid-write; too long and the Application needlessly lags reality.
+
+Let **α** be the average time between consecutive measurement writes for a wafer (Figure 7). While a wafer is still being probed, a new write lands every α or so; once it's truly done, that stream stops for good.
+
+<p align="center">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="plot/case-study/band-gap/band-gap-dark.svg">
+        <img src="plot/case-study/band-gap/band-gap-light.svg" alt="A single wafer's measurement writes along a timeline, with a zoomed callout defining alpha as the average time between consecutive writes.">
+    </picture>
+</p>
+<p align="center"><sub><em>Figure 7: A single wafer's writes over time — each band is one measurement. The zoom defines α, the average gap between consecutive writes.</em></sub></p>
+
+The buffer just needs to be comfortably longer than α, so that a normal gap between writes is never mistaken for the wafer finishing. And since the only cost of overshooting is a little latency, we can afford to be wildly conservative — setting the threshold to, say, **100·α** leaves an enormous margin: a wafer is declared complete only after a silence 100 times longer than its typical write cadence.
+
+Before we build our dbt model, we should be mindful that in a manufacturing production setting this table grows without bound — so recomputing from scratch each run quickly becomes untenable. Hence the `{% if is_incremental() %}` block in the draft solution below.
+
+### Draft Solution
+
+```sql
+{{ 
+    config(
+        materialized='incremental', 
+        unique_key='measurement_id'
+    )
+}}
+
+with source as (
+    select *
+    from raw.measurement
+    {% if is_incremental() %}
+    -- only rows written since the last run
+    where modified_at > (select max(modified_at) from {{ this }})
+    {% endif %}
+),
+
+settled as (
+    select wafer_id
+    from source
+    group by wafer_id
+    -- settled once the wafer's last write is 100·α seconds behind the newest write in source
+    having max(modified_at) < (select max(modified_at) from source) - interval '<100·α> seconds'
+)
+
+select *
+from source
+where wafer_id in (select wafer_id from settled)
+```
+
+Let's imagine we ran continuously ran the draft dbt model over the course of 100 wafer scans. Comparing the production data and reporting (dbt target), we see, yet again, records have been silently skipped.
+
+<p align="center">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="plot/case-study/mismatch/table-comparison-dark.svg">
+        <img src="plot/case-study/mismatch/table-comparison-light.svg" alt="A table comparing per-wafer measurement counts in Production versus Reporting. Two bleeding-edge wafers are correctly absent from Reporting; four settled wafers have Reporting counts lower than Production, showing records were silently dropped.">
+    </picture>
+</p>
+<p align="center"><sub><em>Figure 8: Auditing the Draft Solution. The bleeding-edge wafers (top) are correctly held back — but several settled wafers (bottom) come up silently short, their Reporting counts falling below Production even though they settled well past the 100·α buffer.</em></sub></p>
+
+*This* is the crux of this entire scenario - the incremental filter only admits rows *newer* than what we've already written to the target. When dbt runs and (1) several new wafers are detected as *settled* and (2) several active wafers are unsettled, records associated with (2) inserted hitherto will get swept under the rug, as shown below.
+
+<p align="center">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="plot/case-study/timeline-two-run-clip/timeline-two-run-clip-dark.svg">
+        <img src="plot/case-study/timeline-two-run-clip/timeline-two-run-clip-light.svg" alt="Timeline of two dbt runs. Wafers W-101 and W-102 settle before Run 1 and are captured. W-103 and W-104 are still writing at Run 1 and held back; their writes before the Run 1 high-water mark are clipped and never re-scanned by Run 2, so those records are silently dropped.">
+    </picture>
+</p>
+<p align="center"><sub><em>Figure 9: The mechanism behind Figure 8's missing records, traced across two dbt runs.</em></sub></p>
+
+The fix is to stop keying on "new rows" and instead **over-extract**: on every run, re-scan a fixed trailing window wide enough to re-evaluate any wafer that could still be unsettled. Rows we've already published simply upsert unchanged (that's what `unique_key` buys us), so re-reading them is free of consequence.
+
+### Final Solution
+
+```sql
+{{ 
+    config(
+        materialized='incremental', 
+        unique_key='measurement_id'
+    )
+}}
+
+with source as (
+    select *
+    from raw.measurement
+    {% if is_incremental() %}
+    -- over-extract by the max known wafer scan duration so no settled wafer is clipped;
+    -- increase as materialization performance allows
+    where modified_at > (select max(modified_at) from {{ this }}) - interval '<over extract>'
+    {% endif %}
+),
+
+settled as (
+    select wafer_id
+    from source
+    group by wafer_id
+    -- settled once the wafer's last write is 100·α seconds behind the newest write in source
+    having max(modified_at) < (select max(modified_at) from source) - interval '<100·α> seconds'
+)
+
+select *
+from source
+where wafer_id in (select wafer_id from settled)
+```
+
+## Closing Thoughts
+What inspired me to write about this scenario was not the extent / complexity of the solution, but the various subtle pitfalls the solution is designed to mitigate. Discovering each pitfall was a "gotcha" moment in my journey toward becoming a better data engineer. Some key takeaways I think are universally applicable:
+
+* Always ask - *how* is the data going to be consumed? A data engineer's job doesn't end at `insert/update`.
+* Thoughtful incrementalization matters - a data team's reputation depends on it. During project planning, always budget time for refining incremental strategy.
+* Know when to push back. Some burdens belong to the producer, not you — and deciding when to absorb the complexity yourself versus press for an upstream fix is a constant balancing act.

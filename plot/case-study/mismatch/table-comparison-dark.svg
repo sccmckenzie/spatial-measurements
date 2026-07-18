@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" width="820" height="216" viewBox="0 0 820 216">
+  <g font-weight="bold" fill="#d3d3d3">
+    <text x="12" y="22">wafer_id</text>
+    <text x="252" y="22" text-anchor="end">cnt_production</text>
+    <text x="408" y="22" text-anchor="end">cnt_reporting</text>
+  </g>
+  <line x1="8" y1="30" x2="426" y2="30" stroke="#d3d3d3" stroke-opacity="0.25"/>
+
+  <rect x="6" y="36" width="420" height="26" fill="#facc15" fill-opacity="0.24"/>
+  <text x="12" y="53" fill="#d3d3d3">100</text>
+  <text x="252" y="53" text-anchor="end" fill="#d3d3d3">313</text>
+  <text x="408" y="53" text-anchor="end" fill="#d3d3d3" fill-opacity="0.4">&#8212;</text>
+
+  <rect x="6" y="62" width="420" height="26" fill="#facc15" fill-opacity="0.24"/>
+  <text x="12" y="79" fill="#d3d3d3">99</text>
+  <text x="252" y="79" text-anchor="end" fill="#d3d3d3">313</text>
+  <text x="408" y="79" text-anchor="end" fill="#d3d3d3" fill-opacity="0.4">&#8212;</text>
+
+  <rect x="6" y="88" width="420" height="26" fill="tomato" fill-opacity="0.22"/>
+  <text x="12" y="105" fill="#d3d3d3">53</text>
+  <text x="252" y="105" text-anchor="end" fill="#d3d3d3">373</text>
+  <text x="408" y="105" text-anchor="end" fill="tomato" font-weight="bold">369</text>
+
+  <rect x="6" y="114" width="420" height="26" fill="tomato" fill-opacity="0.22"/>
+  <text x="12" y="131" fill="#d3d3d3">40</text>
+  <text x="252" y="131" text-anchor="end" fill="#d3d3d3">373</text>
+  <text x="408" y="131" text-anchor="end" fill="tomato" font-weight="bold">170</text>
+
+  <rect x="6" y="140" width="420" height="26" fill="tomato" fill-opacity="0.22"/>
+  <text x="12" y="157" fill="#d3d3d3">20</text>
+  <text x="252" y="157" text-anchor="end" fill="#d3d3d3">249</text>
+  <text x="408" y="157" text-anchor="end" fill="tomato" font-weight="bold">127</text>
+
+  <rect x="6" y="166" width="420" height="26" fill="tomato" fill-opacity="0.22"/>
+  <text x="12" y="183" fill="#d3d3d3">8</text>
+  <text x="252" y="183" text-anchor="end" fill="#d3d3d3">373</text>
+  <text x="408" y="183" text-anchor="end" fill="tomato" font-weight="bold">125</text>
+
+  <path d="M432 40 H440 V84 H432" fill="none" stroke="#d3d3d3" stroke-width="1.5"/>
+  <g font-family="system-ui, sans-serif" fill="#d3d3d3" fill-opacity="0.7">
+    <text x="452" y="55">bleeding-edge wafers &#8212; not yet</text>
+    <text x="452" y="73">settled, correctly held back</text>
+  </g>
+
+  <path d="M432 92 H440 V188 H432" fill="none" stroke="#d3d3d3" stroke-width="1.5"/>
+  <g font-family="system-ui, sans-serif" fill="#d3d3d3" fill-opacity="0.7">
+    <text x="452" y="131">records silently dropped &#8212; these wafers</text>
+    <text x="452" y="149">settled long ago, well past the 100&#183;&#945; buffer</text>
+  </g>
+</svg>
