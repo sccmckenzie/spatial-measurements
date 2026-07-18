@@ -183,7 +183,7 @@ Let's imagine we ran continuously ran the draft dbt model over the course of 100
 
 The fix is to stop keying on "new rows" and instead **over-extract**: on every run, re-scan a fixed trailing window wide enough to re-evaluate any wafer that could still be unsettled. Rows we've already published simply upsert unchanged (that's what `unique_key` buys us), so re-reading them is free of consequence.
 
-### Final Model
+### Refined Model
 
 ```sql
 {{ 
