@@ -15,10 +15,8 @@ with source as (
         modified_at
     from raw.measurement_stretched
     {% if is_incremental() %}
-      -- overextract by a margin to ensure that we do not sweep wafer_id's under the rug
-      -- margin minimum should be set to maximum known wafer scan duration
-      -- increase as model materialization performance allows
-      where modified_at > (select max(modified_at) from {{ this }}) - interval '120 minutes'
+      -- simple incrementalization - creates risk of sweeping records under the rug
+      where modified_at > (select max(modified_at) from {{ this }})
     {% endif %}
 ),
 
