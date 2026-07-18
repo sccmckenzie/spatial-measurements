@@ -2,6 +2,9 @@
 
 > Want to run this yourself? See [REPRODUCE.md](REPRODUCE.md) to build and run the simulator end-to-end.
 
+## Introduction
+This data engineering case study draws upon a real scenario encountered in semiconductor manufacturing. Integrating spatial wafer maps between manufacturing production and reporting layer demands a nuanced understanding of source data generation and, subsequently, fine-tuned incremental logic to deliver a seamless experience for the data consumer. We'll take time to properly illustrate the manufacturing context before diving into the technical details.
+
 ## Background
 
 Semiconductor manufacturing generates massive amounts of structured data. Harvesting insights from this data to drive better decision-making is one of the principal competencies of a semi engineer. But those insights rest on a long chain of data movement — and as we'll see, that path from tester to analyst is deceptively hard to engineer.
