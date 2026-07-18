@@ -1,5 +1,7 @@
 # Overcoming Fragmented Spatial Maps
 
+> Want to run this yourself? See [REPRODUCE.md](REPRODUCE.md) to build and run the simulator end-to-end.
+
 ## Background
 
 Semiconductor manufacturing generates massive amounts of structured data. Harvesting insights from this data to drive better decision-making is one of the principal competencies of a semi engineer. But those insights rest on a long chain of data movement — and as we'll see, that path from tester to analyst is deceptively hard to engineer.
@@ -125,9 +127,9 @@ Let **α** be the average time between consecutive measurement writes for a wafe
 
 The buffer just needs to be comfortably longer than α, so that a normal gap between writes is never mistaken for the wafer finishing. And since the only cost of overshooting is a little latency, we can afford to be wildly conservative — setting the threshold to, say, **100·α** leaves an enormous margin: a wafer is declared complete only after a silence 100 times longer than its typical write cadence.
 
-Before we build our dbt model, we should be mindful that in a manufacturing production setting this table grows without bound — so recomputing from scratch each run quickly becomes untenable. Hence the `{% if is_incremental() %}` block in the draft solution below.
+Before we build our dbt model, we should be mindful that in a manufacturing production setting this table grows without bound — so recomputing from scratch each run quickly becomes untenable. Hence the `{% if is_incremental() %}` block in the draft model below.
 
-### Draft Solution
+### Draft Model
 
 ```sql
 {{ 
@@ -167,7 +169,7 @@ Let's imagine we ran continuously ran the draft dbt model over the course of 100
         <img src="plot/case-study/mismatch/table-comparison-light.svg" alt="A table comparing per-wafer measurement counts in Production versus Reporting. Two bleeding-edge wafers are correctly absent from Reporting; four settled wafers have Reporting counts lower than Production, showing records were silently dropped.">
     </picture>
 </p>
-<p align="center"><sub><em>Figure 8: Auditing the Draft Solution. The bleeding-edge wafers (top) are correctly held back — but several settled wafers (bottom) come up silently short, their Reporting counts falling below Production even though they settled well past the 100·α buffer.</em></sub></p>
+<p align="center"><sub><em>Figure 8: Auditing the Draft Model. The bleeding-edge wafers (top) are correctly held back — but several settled wafers (bottom) come up silently short, their Reporting counts falling below Production even though they settled well past the 100·α buffer.</em></sub></p>
 
 *This* is the crux of this entire scenario - the incremental filter only admits rows *newer* than what we've already written to the target. When dbt runs and (1) several new wafers are detected as *settled* and (2) several active wafers are unsettled, records associated with (2) inserted hitherto will get swept under the rug, as shown below.
 
@@ -181,7 +183,7 @@ Let's imagine we ran continuously ran the draft dbt model over the course of 100
 
 The fix is to stop keying on "new rows" and instead **over-extract**: on every run, re-scan a fixed trailing window wide enough to re-evaluate any wafer that could still be unsettled. Rows we've already published simply upsert unchanged (that's what `unique_key` buys us), so re-reading them is free of consequence.
 
-### Final Solution
+### Final Model
 
 ```sql
 {{ 
