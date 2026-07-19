@@ -1,6 +1,8 @@
-# Spatial Measurement Simulator + Integration Case Study
+# Overcoming Fragmented Spatial Maps
 
-This is a companion repository to my blog article: *Addressing Fragmented Data Integration associated with Spatial Measurements*.
+> Before proceeding here, recommend reading through the [case study](README.md) to understand the full context.
+
+## Setup
 
 Prerequisites:
 
@@ -10,11 +12,11 @@ Prerequisites:
 * uv configured on system
 
 With the prerequisites fulfilled, this repo contains everything you need to fully reproduce this case study end-to-end,
-including data generation, batch loading, and cooldown.
+including data generation and batch loading.
 
-The Spatial Measurement Simulator itself is a java app - src located in `scanner` dir. This app expects preconfigured
+The Spatial Measurement Simulator itself is a java app - src located in `scanner` dir. This app writes to a preconfigured
 postgres instance at `jdbc:postgresql://localhost:5432/postgres`. Included makefile will provision this database in 
-a docker container, using dbt (python) to populate configuration tables, then build `scanner` jar from source.
+a docker container, using python to populate configuration tables, then build `scanner` jar from source.
 
 ```bash
 # clone repo, cd into spatial-measurements
@@ -25,27 +27,12 @@ You should expect to see similar output as below.
 ```bash
 Running docker compose
 docker compose up -d
-[+] Running 2/2
- ✔ Network spatial-measurements_default  Created                                                                                                                                                                                                                                         0.0s 
- ✔ Container spatial-measurements-db-1   Started                                                                                                                                                                                                                                         0.2s 
+[+] up 1/1
+ ✔ Container spatial-measurements-db-1 Running
 Waiting for Postgres to be ready...
 Postgres is ready.
-Generating grid file
-writing grid file to postgres config db
-01:04:29  Running with dbt=1.9.4
-01:04:29  Registered adapter: postgres=1.9.0
-01:04:30  Found 1 seed, 433 macros
-01:04:30  
-01:04:30  Concurrency: 1 threads (target='dev')
-01:04:30  
-01:04:30  1 of 1 START seed file config.grid ............................................. [RUN]
-01:04:30  1 of 1 OK loaded seed file config.grid ......................................... [INSERT 315 in 0.12s]
-01:04:30  
-01:04:30  Finished running 1 seed in 0 hours 0 minutes and 0.22 seconds (0.22s).
-01:04:30  
-01:04:30  Completed successfully
-01:04:30  
-01:04:30  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 TOTAL=1
+Generating grid file and writing to postgres config db
+uv run provision-grid.py
 build scanner jar from source
 [INFO] Scanning for projects...
 [INFO] 
@@ -57,46 +44,92 @@ build scanner jar from source
 [INFO] --- resources:3.3.1:resources (default-resources) @ scanner ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
 [INFO] Copying 1 resource from src/main/resources to target/classes
-[INFO] 
-[INFO] --- compiler:3.13.0:compile (default-compile) @ scanner ---
-[INFO] Nothing to compile - all classes are up to date.
-[INFO] 
-[INFO] --- resources:3.3.1:testResources (default-testResources) @ scanner ---
-[INFO] skip non existing resourceDirectory /Users/scottmckenzie/repo/spatial-measurements/scanner/src/test/resources
-[INFO] 
-[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ scanner ---
-[INFO] Nothing to compile - all classes are up to date.
-[INFO] 
-[INFO] --- surefire:3.5.3:test (default-test) @ scanner ---
-[INFO] Tests are skipped.
-[INFO] 
-[INFO] --- jar:3.4.2:jar (default-jar) @ scanner ---
-[INFO] Building jar: /Users/scottmckenzie/repo/spatial-measurements/scanner/target/scanner-0.0.1-SNAPSHOT.jar
-[INFO] 
-[INFO] --- spring-boot:3.4.5:repackage (repackage) @ scanner ---
-[INFO] Replacing main artifact /Users/scottmckenzie/repo/spatial-measurements/scanner/target/scanner-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
-[INFO] The original artifact has been renamed to /Users/scottmckenzie/repo/spatial-measurements/scanner/target/scanner-0.0.1-SNAPSHOT.jar.original
+#### abridged ####
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  0.882 s
-[INFO] Finished at: 2025-08-30T19:39:04-05:00
+[INFO] Total time:  1.879 s
+[INFO] Finished at: 2026-07-18T18:37:31-05:00
 [INFO] ------------------------------------------------------------------------
 ```
 
-You can adjust the grid size by changing `scale` (default `10`) in `provision-grid.py`. To apply changes:
+To change the size of the wafer maps, adjust the `radii` variable on line 4. Then, reapply configuration to db by running:
 
 ```bash
-uv run dbt seed --profile spatial_config --project-dir dbt_spatial_config
+uv run provision-grid.py
 ```
 
 `scanner` app can be configured in `application.yml` found in project root. Notable parameters include:
 
-* `scan-pool-size`: how many scans can be generated concurrently
-* `scan-count`: total number of scans to generate during app runtime
+```yml
+scanner:
+  pool-size: 4 # how many scans can be generated concurrently
+  count: 100 # total number of scans to generate during app runtime
+  write-delay-ms-min: 1 # minimum pause (ms) inserted before each individual measurement write
+  write-delay-ms-max: 1 # maximum pause (ms) inserted before each individual measurement write — each write sleeps a random duration in `[min, max]`, spacing out `modified_at` timestamps so concurrent scans interleave (set max to 0 to disable)
+```
 
-To launch app, run:
+## Running the workflow
+
+There are 2 dbt models:
+
+* `measurement_unsafe` - the incremental model described in the [Draft Model](README.md#draft-model) section of the case study. Its incremental filter (`modified_at > max(modified_at)`) advances the watermark naively, so measurements from a still-settling scan can be permanently swept under the rug on subsequent runs — leaving incomplete wafer maps in the warehouse.
+* `measurement_safe` - the corrected incremental model from the [Refined Model](README.md#refined-model) section. It over-extracts from the source by a time margin (larger than the maximum known scan duration) so late-arriving measurements are re-captured rather than skipped, guaranteeing each wafer map ends up complete.
+
+Please note the settle & over-extraction parameters have been fine-tuned for the `application.yml` parameters as version-controlled.
+
+The dbt models are meant to be executed *while* the scanner app is running. For convenience, I have preprovisioned a script that orchestrates this for you.
 
 ```bash
-java -jar scanner/target/scanner-0.0.1-SNAPSHOT.jar
+source scan-and-load.sh
+```
+
+You can run below query during & after execution has finished to see the difference between the raw data, the unsafe naive model, and the safe refined model with overextraction.
+
+Connect using the read-only `scanner_ro` role:
+
+```
+jdbc:postgresql://localhost:5432/postgres?user=scanner_ro&password=applesauce
+```
+
+```sql
+with a as(
+    select
+        wafer_id,
+        count(1) as cnt_raw
+    from
+        raw.measurement_stretched
+    group by wafer_id
+), b as (
+    select
+        wafer_id,
+        count(1) as cnt_safe
+    from
+        reporting.measurement_safe
+    group by wafer_id
+), c as (
+    select
+        wafer_id,
+        count(1) as cnt_unsafe
+    from
+        reporting.measurement_unsafe
+    group by wafer_id
+)
+select
+    a.wafer_id,
+    a.cnt_raw,
+    b.cnt_safe,
+    c.cnt_unsafe
+from
+    a
+left join b
+    on a.wafer_id = b.wafer_id
+left join c
+    on a.wafer_id = c.wafer_id
+-- where
+--     (cnt_raw != cnt_safe)
+--     or (cnt_raw != cnt_unsafe)
+--     or cnt_safe is null
+--     or cnt_unsafe is null
+order by a.wafer_id
 ```
